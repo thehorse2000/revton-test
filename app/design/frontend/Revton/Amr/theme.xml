@@ -1,0 +1,12 @@
+<!--
+/**
+ * @vendor      Revton
+ * @theme       Revton_Amr
+ * @author      Amr Osama <amrosama5@gmail.com>
+ */
+-->
+
+<theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Config/etc/theme.xsd">
+    <title>Revton_Amr</title>
+    <parent>Magento/luma</parent>
+</theme>

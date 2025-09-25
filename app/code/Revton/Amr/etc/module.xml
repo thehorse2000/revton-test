@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @category  Revton
+ * @package   Revton_Amr
+ */
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
+    <module name="Revton_Amr">
+        <sequence>
+            <module name="Magento_Checkout"/>
+            <module name="Magento_Theme"/>
+        </sequence>
+    </module>
+</config>

@@ -1,0 +1,49 @@
+<?php
+
+/**
+ * @vendor      Revton
+ * @theme       Revton_Amr
+ * @author      Amr Osama <amrosama5@gmail.com>
+ */
+
+/** @var \Magento\Framework\View\Element\Template $block */
+?>
+
+<div id="custom-modal">
+    <?= $block->escapeHtml(__(
+        'You ADDEED %1 to your <a href="%2">shopping cart</a>.',
+        $block->getData('product_name'),
+        $block->getData('cart_url')
+    ), ['a']); ?>
+</div>
+<script>
+    require(
+        [
+            'jquery',
+            'Magento_Ui/js/modal/modal'
+        ],
+        function(
+            $,
+            modal
+        ) {
+            var options = {
+                type: 'popup',
+                responsive: true,
+                innerScroll: false,
+                modalClass: 'custom-modal',
+                buttons: [{
+                    text: $.mage.__('Return to the homepage'),
+                    click: function() {
+                        this.closeModal();
+                    }
+                }],
+            };
+
+            var popup = modal(options, $('#custom-modal'));
+
+            $(document).ready(function() {
+                $('#custom-modal').modal('openModal');
+            });
+        }
+    );
+</script>

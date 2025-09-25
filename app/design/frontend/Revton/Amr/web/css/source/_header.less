@@ -1,0 +1,38 @@
+//
+//  Desktop
+//  ---------------------------------------------
+
+.media-width(@extremum, @break) when (@extremum ='min') and (@break =@screen__m) {
+    .page-header {
+        background-color: #fff;
+        position: fixed;
+        top: 0;
+        right: 0;
+        left: 0;
+        margin: auto;
+        -webkit-transition: left .2s ease;
+        transition: left .2s ease;
+        z-index: 98;
+    }
+
+    .sections.nav-sections {
+        margin-right: auto;
+        margin-left: auto;
+        padding: 0;
+        background-color: #fff;
+        top: 140px;
+        left: 0;
+        right: 0;
+        bottom: unset;
+        text-align: center;
+        overflow-y: visible;
+        -webkit-transition: none;
+        transition: none;
+        z-index: 97;
+        position: fixed;
+    }
+
+    #maincontent {
+        margin-top: 170px;
+    }
+}
