@@ -1,0 +1,45 @@
+<?php
+
+/**
+ * @vendor    Revton
+ * @theme     Revton_Amr
+ * @author    Amr Osama <amrosama5@gmail.com>
+ */
+
+use Magento\Framework\Escaper;
+use Snowdog\Menu\Block\Menu;
+
+/** @var Menu $block */
+/** @var Escaper $escaper */
+
+if ($block->getMenu()): ?>
+    <?php $menuClass = $block->getMenu()->getCssClass() ?>
+    <nav class="footer-links <?= $escaper->escapeHtmlAttr($menuClass) ?>"
+        data-mage-init='{"snowdogMenu": {}}'>
+        <ul class="links-container <?= $escaper->escapeHtmlAttr($menuClass) ?>__list">
+            <?php foreach ($block->getNodes() as $node): ?>
+                <?php
+                $childrenLevel = $node->getLevel() + 1;
+                $children = $block->getNodes($childrenLevel, $node);
+                $node->setIsParent((bool) $children);
+                $parentClass = $children ? ' ' . $menuClass . '__item--parent' : '';
+                $additionalClasses = $node->getClasses() ? ' ' . $node->getClasses() : '';
+                $itemClasses = $parentClass . $additionalClasses;
+                ?>
+                <li class="links <?= $escaper->escapeHtmlAttr($menuClass) ?>__item
+                            <?= $escaper->escapeHtmlAttr($itemClasses) ?>">
+                    <?php if ($node->getIsParent() && !$node->getIsViewAllLink()): ?>
+                        <span class="h2 <?= $escaper->escapeHtmlAttr($itemClasses) ?>">
+                            <?= $escaper->escapeHtml($node->getTitle()) ?>
+                        </span>
+                        <?= /* @noEscape */ $block->renderSubmenu($children, $node, $childrenLevel) ?>
+                    <?php else: ?>
+                        <div class="h2">
+                            <?= /* @noEscape */ $block->renderMenuNode($node) ?>
+                        </div>
+                    <?php endif; ?>
+                </li>
+            <?php endforeach ?>
+        </ul>
+    </nav>
+<?php endif; ?>

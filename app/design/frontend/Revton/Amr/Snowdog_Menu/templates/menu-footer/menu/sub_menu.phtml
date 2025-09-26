@@ -1,0 +1,60 @@
+<?php
+
+/**
+ * @vendor    Revton
+ * @theme     Revton_Amr
+ * @author    Amr Osama <amrosama5@gmail.com>
+ */
+
+use Magento\Framework\Escaper;
+use Snowdog\Menu\Block\Menu;
+
+/** @var Menu $block */
+/** @var Escaper $escaper */
+
+if ($block->getMenu()): ?>
+    <?php
+    $menuClass = $block->getMenu()->getCssClass();
+    $parentNode = $block->getParentNode();
+    $level = $block->getLevel();
+
+    $wrapperAttributes = [
+        'class' => [
+            $menuClass . '__inner-list',
+            $menuClass . '__inner-list--level' . $level,
+            'separate-links'
+        ],
+        'data-menu' => 'menu-' . $parentNode->getNodeId()
+    ];
+    ?>
+    <ul <?= /* @noEscape */ $block->buildAttrFromArray($wrapperAttributes) ?>>
+        <?php foreach ($block->getSubmenuNodes() as $node): ?>
+            <?php
+            $childrenLevel = $node->getLevel() + 1;
+            $children = $block->getNodes($childrenLevel, $node);
+            $node->setIsParent((bool) $children);
+
+            $nodeAttributes = [
+                'class' => [
+                    $menuClass . '__inner-item',
+                    $menuClass . '__inner-item--level' . $level,
+                    'link-wrapper'
+                ]
+            ];
+
+            if ($children) {
+                $nodeAttributes['class'][] = $menuClass . '__inner-item--parent';
+            }
+
+            if ($node->getClasses()) {
+                $nodeAttributes['class'][] = $node->getClasses();
+            }
+            ?>
+
+            <li <?= /* @noEscape */ $block->buildAttrFromArray($nodeAttributes) ?>>
+                <?= /* @noEscape */ $block->renderMenuNode($node) ?>
+                <?= /* @noEscape */ $block->renderSubmenu($children, $node, $childrenLevel) ?>
+            </li>
+        <?php endforeach ?>
+    </ul>
+<?php endif; ?>

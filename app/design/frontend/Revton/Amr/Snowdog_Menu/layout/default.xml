@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @vendor    Revton
+ * @theme     Revton_Amr
+ * @author    Amr Osama <amrosama5@gmail.com>
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="header-wrapper">
+            <referenceBlock class="Magento\Theme\Block\Html\Header\Logo" name="logo">
+                <block class="Magento\Framework\View\Element\Template" name="mobile.header"
+                    template="Magento_Theme::html/header/mobileMenuButton.phtml"/>
+            </referenceBlock>
+        </referenceContainer>
+        <referenceContainer name="page.top">
+            <referenceBlock name="navigation.sections" remove="true" />
+            <block class="Snowdog\Menu\Block\Menu" name="main.menu" template="Snowdog_Menu::main-menu/menu.phtml">
+                <arguments>
+                    <argument name="menu" xsi:type="string">main-menu</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

@@ -1,0 +1,37 @@
+<?php
+
+/**
+ * @vendor    Revton
+ * @theme     Revton_Amr
+ * @author    Amr Osama <amrosama5@gmail.com>
+ */
+
+use Magento\Framework\Escaper;
+use Snowdog\Menu\Block\NodeType\CmsPage;
+
+/** @var CmsPage $block */
+/** @var Escaper $escaper */
+
+$nodeId = $block->getId();
+$class = $block->getMenuClass();
+$pageUrl = $block->getPageUrl($nodeId);
+$pageUrl = $pageUrl ?: '#';
+$dataAttribute = '';
+
+if ($block->getIsViewAllLink()) {
+    $title = __('View All');
+    $classLink = $class . '__inner-link';
+} else {
+    $classLink = $block->getIsRoot() ? $class . '__link' : $class . '__inner-link';
+    $title = $block->getTitle();
+
+    if ($nodeId) {
+        $dataAttribute = ' data-menu="menu-' . $nodeId . '"';
+    }
+}
+?>
+<a href="<?= $escaper->escapeUrl($pageUrl) ?>"
+    class="<?= $escaper->escapeHtml($classLink) ?> link"
+    <?= /* @noEscape */ $dataAttribute ?>>
+    <?= $escaper->escapeHtml($title) ?>
+</a>

@@ -1,0 +1,40 @@
+<?php
+
+/**
+ * @vendor    Revton
+ * @theme     Revton_Amr
+ * @author    Amr Osama <amrosama5@gmail.com>
+ */
+
+use Magento\Framework\Escaper;
+use Snowdog\Menu\Block\NodeType\Category;
+
+/** @var Category $block */
+/** @var Escaper $escaper */
+
+$nodeId = $block->getId();
+$class = $block->getMenuClass();
+$categoryUrl = $block->getCategoryUrl($nodeId);
+$categoryUrl = $categoryUrl ?: '#';
+$dataAttribute = '';
+
+if ($block->getIsViewAllLink()) {
+    $title = __('View All');
+    $classLink = $class . '__inner-link';
+} else {
+    $classLink = $block->getIsRoot() ? $class . '__link level-top' : $class . '__inner-link';
+    $title = $block->getTitle();
+
+    if ($nodeId) {
+        $dataAttribute = ' data-menu="menu-' . $nodeId . '"';
+    }
+}
+?>
+<a href="<?= $escaper->escapeUrl($categoryUrl) ?>"
+    class="<?= $escaper->escapeHtmlAttr($classLink) ?> link"
+    <?= /* @noEscape */ $dataAttribute ?>>
+    <?= $escaper->escapeHtml($title) ?>
+    <?php if ($block->getIsRoot()): ?>
+        <div></div>
+    <?php endif; ?>
+</a>

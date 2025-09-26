@@ -1,0 +1,49 @@
+<?php
+
+/**
+ * @vendor    Revton
+ * @theme     Revton_Amr
+ * @author    Amr Osama <amrosama5@gmail.com>
+ */
+
+use Magento\Framework\Escaper;
+
+/**
+ * @var $block Menu
+ * @var $escaper Escaper
+ */
+
+?>
+<?php if ($block->getMenu()): ?>
+    <?php $menuClass = $block->getMenu()->getCssClass() ?>
+    <nav class="navigation <?= $escaper->escapeHtmlAttr($menuClass) ?>" role="navigation" id="navigation"
+        data-mage-init='{"snowdogMenu": {}}'>
+        <ul class="main-menu <?= $escaper->escapeHtmlAttr($menuClass) ?>__list">
+            <?php foreach ($block->getNodes() as $key => $node): ?>
+                <?php
+                $childrenLevel = $node->getLevel() + 1;
+                $children = $block->getNodes($childrenLevel, $node);
+                $node->setIsParent((bool) $children);
+                $parentClass = $children ? ' ' . $menuClass . '__item--parent parent ' : '';
+                $additionalClasses = $node->getClasses() ? ' ' . $node->getClasses() : '';
+                $first = $key === 0 ? ' first' : '';
+                $last = $key === count($block->getNodes()) - 1 ? ' last' : '';
+                $itemClasses = ' level-top ' . $parentClass . $additionalClasses . $first . $last;
+                ?>
+                <li class="level0 <?= $escaper->escapeHtmlAttr($menuClass) ?>__item
+                            <?= $escaper->escapeHtmlAttr($itemClasses) ?>">
+                    <?= /* @noEscape */ $block->renderMenuNode($node) ?>
+                    <div class="level-top parent-node"><?= /* @noEscape */ $block->renderMenuNode($node) ?></div>
+                    <?= /* @noEscape */ $block->renderSubmenu($children, $node, $childrenLevel) ?>
+                </li>
+            <?php endforeach ?>
+        </ul>
+    </nav>
+    <script type="text/x-magento-init">
+        {
+            "#navigation": {
+                "tabletDropMenu": {}
+            }
+        }
+    </script>
+<?php endif; ?>

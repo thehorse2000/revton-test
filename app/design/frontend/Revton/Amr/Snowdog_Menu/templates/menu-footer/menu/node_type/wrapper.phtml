@@ -1,0 +1,31 @@
+<?php
+
+/**
+ * @vendor    Revton
+ * @theme     Revton_Amr
+ * @author    Amr Osama <amrosama5@gmail.com>
+ */
+
+use Magento\Framework\Escaper;
+use Snowdog\Menu\Block\NodeType\Wrapper;
+
+/** @var Wrapper $block */
+/** @var Escaper $escaper */
+
+$attributes = [];
+$class = $block->getMenuClass();
+
+if ($block->getIsViewAllLink()) {
+    $classLink = $class . '__inner-link';
+} else {
+    $classLink = $block->getIsRoot() ? $class . '__link' : $class . '__inner-link';
+
+    if ($block->getId()) {
+        $attributes[] = 'data-menu="menu-' . $block->getId() . '"';
+    }
+}
+$attributes[] = 'class="' . $classLink . '"';
+?>
+<div <?= /* @noEscape */ implode(' ', $attributes) ?>>
+    <?= $escaper->escapeHtml($block->getTitle()) ?>
+</div>

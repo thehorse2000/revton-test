@@ -1,0 +1,150 @@
+<?php
+
+/**
+ * @vendor    Revton
+ * @theme     Revton_Amr
+ * @author    Amr Osama <amrosama5@gmail.com>
+ */
+
+use Magento\Framework\Escaper;
+use Snowdog\Menu\Block\Menu;
+
+/** @var Menu $block */
+/** @var Escaper $escaper */
+
+if ($block->getMenu()): ?>
+    <?php
+    $menuClass = $block->getMenu()->getCssClass();
+    $parentNode = $block->getParentNode();
+    $submenuNodes = $block->getSubmenuNodes();
+    $level = $block->getLevel();
+    $imageData = $block->getSubNodeImageData($submenuNodes);
+
+    $wrapperAttributes = [
+        'class' => [
+            $menuClass . '__inner-list',
+            $menuClass . '__inner-list--level' . $level,
+            'level' . $parentNode->getLevel(),
+            'submenu',
+            'submenu-' . $parentNode->getNodeId(),
+        ],
+        'data-menu' => 'menu-' . $parentNode->getNodeId()
+    ];
+    ?>
+    <div <?= /* @noEscape */ $block->buildAttrFromArray($wrapperAttributes) ?>>
+        <div class="submenu-columns">
+            <ul class="submenu-list">
+                <?php foreach ($submenuNodes as $node): ?>
+                    <?php
+                    $nodeAttributes = [
+                        'class' => [
+                            'level' . $level,
+                            $menuClass . '__inner-item',
+                            $menuClass . '__inner-item--level' . $level
+                        ]
+                    ];
+
+                    if ($node->getClasses()) {
+                        $nodeAttributes['class'][] = $node->getClasses();
+                    }
+                    ?>
+
+                    <li <?= /* @noEscape */ $block->buildAttrFromArray($nodeAttributes) ?>
+                        onmouseover="toggleSubNodeImage(
+                            this,
+                            <?= $escaper->escapeUrl(json_encode($imageData[$node->getNodeId()] ?? [], true)) ?>
+                        )">
+                        <?= /* @noEscape */ $block->renderMenuNode($node) ?>
+                    </li>
+                <?php endforeach ?>
+            </ul>
+            <div class="subnode-image-wrapper">
+                <?php if ($subNode = $block->getFirstImageNode($submenuNodes)): ?>
+                    <?php $subNodeImageUrl = $block->getNodeImageUrl($subNode); ?>
+                    <?php $alt = $subNode->getImageAltText() ?: $subNode->getTitle(); ?>
+                    <?php $subnodeCustomUrl = $block->getImageCustomUrl($subNode); ?>
+                    <?php if ($subnodeCustomUrl): ?>
+                        <a class="subnode-image-link" href="<?= $escaper->escapeUrl($subnodeCustomUrl) ?>">
+                        <?php endif ?>
+                        <div class="desktop-menu-image">
+                            <img src=""
+                                data-url="<?= $escaper->escapeUrl($subNodeImageUrl) ?>"
+                                alt="<?= $escaper->escapeHtmlAttr($alt) ?>"
+                                loading="lazy"
+                                width="<?= $escaper->escapeHtmlAttr($subNode->getImageWidth()) ?>"
+                                height="<?= $escaper->escapeHtmlAttr($subNode->getImageHeight()) ?>" />
+                        </div>
+                        <?php if ($subnodeCustomUrl): ?>
+                        </a>
+                    <?php endif ?>
+                <?php endif ?>
+            </div>
+            <div class="parent-image-wrapper">
+                <?php if ($parentNode->getImage()): ?>
+                    <?php $customUrl = $block->getImageCustomUrl($parentNode); ?>
+                    <?php $nodeImageUrl = $block->getNodeImageUrl($parentNode); ?>
+                    <?php $alt = $parentNode->getImageAltText() ?: $parentNode->getTitle(); ?>
+                    <?php if ($customUrl): ?>
+                        <a href="<?= $escaper->escapeUrl($customUrl) ?>">
+                        <?php endif ?>
+                        <div class="desktop-menu-image">
+                            <img src=""
+                                data-url="<?= $escaper->escapeUrl($nodeImageUrl) ?>"
+                                alt="<?= $escaper->escapeHtmlAttr($alt) ?>"
+                                loading="lazy"
+                                width="<?= $escaper->escapeHtmlAttr($parentNode->getImageWidth()) ?>"
+                                height="<?= $escaper->escapeHtmlAttr($parentNode->getImageHeight()) ?>" />
+                        </div>
+                        <span class="custom-title">
+                            <?= $escaper->escapeHtml($parentNode->getImageTitle() ?: $parentNode->getTitle()) ?>
+                        </span>
+                        <?php if ($customUrl): ?>
+                        </a>
+                    <?php endif ?>
+                <?php endif ?>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.querySelectorAll('#navigation .main-menu li.parent')?.forEach(function(elem) {
+            elem.addEventListener('mouseover', loadImages.bind(null, elem, false));
+            elem.addEventListener('touchstart', loadImages.bind(null, elem, false));
+            elem.querySelector('.level-top').addEventListener('focus', loadImages.bind(null, elem, false));
+        })
+
+        function loadImages(parent) {
+            parent.querySelectorAll('.submenu .desktop-menu-image img').forEach(function(el) {
+                if (window.innerWidth > 1024) {
+                    el.onload = () => {
+                        el.classList.add('loaded');
+                    };
+
+                    if (!el.getAttribute('src')) {
+                        el.src = el.getAttribute('data-url');
+                    }
+                }
+            })
+        }
+
+        function toggleSubNodeImage(link, data) {
+            if (window.innerWidth > 1024) {
+                let parent = link.closest('.submenu-columns'),
+                    menuImage = parent.querySelector('.subnode-image-wrapper .desktop-menu-image img');
+
+                if (data && menuImage && data.url !== menuImage.src) {
+                    menuImage.classList.remove('loaded');
+                    setTimeout(updateImage.bind(null, data, menuImage), 200);
+                }
+            }
+        }
+
+        function updateImage(data, image) {
+            image.src = data.url;
+            image.alt = data.alt;
+
+            if (image.closest('.subnode-image-link')) {
+                image.closest('.subnode-image-link').href = data.customUrl;
+            }
+        }
+    </script>
+<?php endif; ?>
