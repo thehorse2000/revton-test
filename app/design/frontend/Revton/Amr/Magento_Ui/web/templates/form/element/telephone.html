@@ -1,0 +1,22 @@
+<!--
+/**
+ * @category  Revton
+ * @package   Revton_Amr
+ */
+-->
+<div class="phone-field">
+    <input type="text" disabled name="country_code" data-bind="value: countryCode" />
+    <input class="input-text" type="text" data-bind="
+    value: localValue,
+    valueUpdate: 'keyup',
+    hasFocus: focused,
+    attr: {
+        name: inputName,
+        placeholder: placeholder,
+        'aria-describedby': getDescriptionId(),
+        'aria-required': required,
+        'aria-invalid': error() ? true : 'false',
+        id: uid,
+        disabled: disabled
+    }" />
+</div>
